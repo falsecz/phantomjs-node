@@ -90,6 +90,7 @@
       httpServer.on('listening', function() {
         var ps;
         ps = startPhantomProcess(options.binary, options.port, args);
+        options.pid = ps.pid;
         return ps.on('exit', function(code, signal) {
           var p;
           httpServer.close();
@@ -121,6 +122,7 @@
         d.on('remote', function(phantom) {
           wrap(phantom);
           phanta.push(phantom);
+          phantom.options = options;
           return typeof cb === "function" ? cb(phantom) : void 0;
         });
         d.pipe(stream);
