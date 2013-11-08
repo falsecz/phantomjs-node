@@ -14,17 +14,17 @@ startPhantomProcess = (binary, port, args) ->
   ps = child.spawn binary, args.concat [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
-  
+
   ps.stderr.on 'data', (data) ->
     return if data.toString('utf8').match /No such method.*socketSentData/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{data}"
-  
+
   ps.on 'error', (err) ->
     if err?.code is 'ENOENT'
       console.error "phantomjs-node: You don't have 'phantomjs' installed"
     else
       throw err
-      
+
   ps
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
@@ -63,7 +63,7 @@ module.exports =
     httpServer.on 'listening', () ->
 
       ps = startPhantomProcess options.binary, options.port, args
-
+      options.pid = ps.pid
       # @Description: when the background phantomjs child process exits or crashes
       #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
       ps.on 'exit', (code, signal) ->
@@ -85,6 +85,7 @@ module.exports =
       d.on 'remote', (phantom) ->
         wrap phantom
         phanta.push phantom
+        phantom.options = options
         cb? phantom
 
       d.pipe stream
