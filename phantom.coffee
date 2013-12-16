@@ -82,11 +82,12 @@ module.exports =
 
       d = dnode()
 
-      d.on 'remote', (phantom) ->
-        wrap phantom
-        phanta.push phantom
-        phantom.options = options
-        cb? phantom
+      d.on 'remote', (p) ->
+        wrap p
+        phantom = p
+        phanta.push p
+        p.options = options
+        cb? p
 
       d.pipe stream
       stream.pipe d

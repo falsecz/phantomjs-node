@@ -119,11 +119,12 @@
       sock = shoe(function(stream) {
         var d;
         d = dnode();
-        d.on('remote', function(phantom) {
-          wrap(phantom);
-          phanta.push(phantom);
-          phantom.options = options;
-          return typeof cb === "function" ? cb(phantom) : void 0;
+        d.on('remote', function(p) {
+          wrap(p);
+          phantom = p;
+          phanta.push(p);
+          p.options = options;
+          return typeof cb === "function" ? cb(p) : void 0;
         });
         d.pipe(stream);
         return stream.pipe(d);
